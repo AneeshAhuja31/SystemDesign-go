@@ -23,8 +23,8 @@ func main(){
 	errHelper(err)
 	defer ch.Close()
      
-    producer(ch)  // To send messages
-    // consumer(ch)     // To receive messages
+    // producer(ch)  
+    consumer(ch)    
 
 
 }
