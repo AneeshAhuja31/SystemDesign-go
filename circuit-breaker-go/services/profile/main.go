@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-
+	"strconv"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,6 +29,41 @@ func main(){
 		}
 		c.JSON(http.StatusOK,userProfile)
 	})
+
+	router.GET("/profiles/similar",func(ctx *gin.Context) {
+		email := ctx.Query("email")
+		if email == "" {
+			ctx.JSON(400, gin.H{
+				"error":"Empty email",
+			})
+			return
+		}
+		userProfile,err := fetchProfileData(db,email)
+		if err != nil {
+			fmt.Println("Error: ",err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error":err.Error(),
+			})
+			return
+		}
+		limit := ctx.Query("limit")
+		num_limit,err := strconv.Atoi(limit)
+		if err != nil {
+			ctx.JSON(400, gin.H{
+				"error":err,
+			})
+			return
+		}
+		similarUsers, err := fetchProfilesByHobbies(db,userProfile.Hobbies,email, num_limit)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError,gin.H{
+				"error":err,
+			})
+			return
+		}
+		ctx.JSON(http.StatusOK,similarUsers)
+	})
+
 	err := router.Run(":7000")
 	handleError(err)
 }

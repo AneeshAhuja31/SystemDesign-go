@@ -3,8 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
-
+	"strconv"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
@@ -46,4 +47,35 @@ func fetchProfileData(db *sql.DB, email string)(profile,error){
 		&user_profile.CreatedAt,
 	)
 	return user_profile,err
+}
+
+
+func fetchProfilesByHobbies(db *sql.DB, hobbies []string, excludeEmail string, limit int)([]profile,error){
+	sql_query := `
+		SELECT id,email,username,dob,bio,hobbies,created_at 
+		FROM profiles
+		WHERE hobbies && $1
+		AND email != $2
+		LIMIT $3
+	`
+	hobbiesArray := "{" + strings.Join(hobbies,",") + "}"
+	rows,err := db.Query(sql_query,hobbiesArray,excludeEmail,strconv.Itoa(limit))
+	if err != nil {
+		return []profile{},err
+	}
+	var profiles []profile
+	for rows.Next(){
+		var curr_profile profile
+		rows.Scan(
+			&curr_profile.ID,
+			&curr_profile.Username,
+			&curr_profile.Email,
+			&curr_profile.DOB,
+			&curr_profile.Bio,
+			pq.Array(&curr_profile.Hobbies),
+			&curr_profile.CreatedAt,
+		)
+		profiles = append(profiles, curr_profile)
+	}
+	return profiles,nil
 }
