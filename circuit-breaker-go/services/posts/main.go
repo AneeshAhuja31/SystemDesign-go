@@ -18,7 +18,7 @@ func main(){
 			})
 			return
 		}
-		posts_data,err := fetchPostbyEmail(db,email)
+		posts_data,err := fetchPostsbyEmail(db,email)
 		if err != nil{
 			ctx.JSON(http.StatusInternalServerError,gin.H{
 				"error":err.Error(),

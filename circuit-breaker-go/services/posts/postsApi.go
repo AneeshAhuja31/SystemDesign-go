@@ -25,7 +25,7 @@ func initPQ(hostname string, port int)*sql.DB{
 	return db
 }
 
-func fetchPostbyEmail(db*sql.DB,email string)([]post,error){
+func fetchPostsbyEmail(db*sql.DB,email string)([]post,error){
 	query_string := "SELECT id,email,content,views,created_at FROM posts WHERE email = $1"
 	rows,err := db.Query(query_string,email)
 	if err != nil {
