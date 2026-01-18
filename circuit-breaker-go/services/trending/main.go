@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
+	//"io"
 	"net/http"
 	"os"
 	"time"
@@ -35,18 +35,29 @@ func main(){
 			})
 			return
 		}
-		defer resp.Body.Close()
-
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Println("Error parsing request body: ",err)
+		// defer resp.Body.Close()
+		
+		var posts []post
+		err1 := json.NewDecoder(resp.Body).Decode(&posts)
+		if err1 != nil {
+			fmt.Println("Error parsing json: ",err1)
 			ctx.JSON(http.StatusInternalServerError,gin.H{
-				"error":err,
+				"error":err1,
 			})
 			return
 		}
-		var posts []post
-		json.Unmarshal(body, &posts)
+
+		
+		// body, err := io.ReadAll(resp.Body)
+		// if err != nil {
+		// 	fmt.Println("Error parsing request body: ",err)
+		// 	ctx.JSON(http.StatusInternalServerError,gin.H{
+		// 		"error":err,
+		// 	})
+		// 	return
+		// }
+		// // var posts []post
+		// json.Unmarshal(body, &posts)
 		
 		ctx.JSON(http.StatusOK,gin.H{
 			"trending":posts,

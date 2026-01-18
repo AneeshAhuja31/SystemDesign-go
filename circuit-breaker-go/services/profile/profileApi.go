@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type profileStruct struct {
+type profile struct {
 	ID int64 `json:"id"`
 	Email string `json:"email"`
 	Username string `json:"username"`
@@ -32,18 +32,18 @@ func initPQ(host string, port int) *sql.DB{
 	return db
 }
 
-func fetchProfileData(db *sql.DB, email string)(profileStruct,error){
+func fetchProfileData(db *sql.DB, email string)(profile,error){
 	sql_query := `SELECT id,email,username,dob,bio,hobbies,created_at FROM profiles WHERE email = $1`
 	row := db.QueryRow(sql_query,email)
-	var profile profileStruct
+	var user_profile profile
 	err := row.Scan(
-		&profile.ID, 
-		&profile.Email,
-		&profile.Username, 
-		&profile.DOB, 
-		&profile.Bio,
-		pq.Array(&profile.Hobbies),
-		&profile.CreatedAt,
+		&user_profile.ID, 
+		&user_profile.Email,
+		&user_profile.Username, 
+		&user_profile.DOB, 
+		&user_profile.Bio,
+		pq.Array(&user_profile.Hobbies),
+		&user_profile.CreatedAt,
 	)
-	return profile,err
+	return user_profile,err
 }
