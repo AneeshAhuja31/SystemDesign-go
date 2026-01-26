@@ -1,2 +1,5 @@
 package node
 
+func AddFile(){
+	
+}
