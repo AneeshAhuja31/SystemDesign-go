@@ -1,10 +1,10 @@
 package ring
 
 import (
-	"sha-go/node"
-	"sha-go/config"
-	"github.com/redis/go-redis/v9"
 	"context"
+	"sha-go/config"
+	"sha-go/node"
+	"github.com/redis/go-redis/v9"
 )
 
 type Ring struct {
@@ -13,9 +13,9 @@ type Ring struct {
 	Ring []node.Node
 }
 
-func MakeRing()*Ring{
-	redisClient,ctx := config.InitRedis("localhost",6379)
-	newRing := make([]node.Node, 16)
+func MakeRing() *Ring {
+	redisClient,ctx := config.InitRedis("localhost", 6379)
+	newRing := make([]node.Node,TotalSlots)
 	return &Ring{
 		RedisConn: redisClient,
 		Ctx: ctx,
