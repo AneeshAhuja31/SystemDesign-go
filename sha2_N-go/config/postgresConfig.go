@@ -10,7 +10,7 @@ import (
 type FileRecord struct{
 	Key string
 	Value string
-	Hash uint64
+	Hash int64
 }
 
 func InitPQ(host string, port int)*sql.DB{

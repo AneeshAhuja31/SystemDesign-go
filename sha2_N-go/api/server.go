@@ -68,9 +68,9 @@ func (srv *Server) GetHandler(w http.ResponseWriter, r *http.Request) {
 		slotQuery := fmt.Sprintf("SELECT value, hash FROM files_%d WHERE key = $1", srv.Node.Slot)
 
 		var value string
-		var hash uint64
+		var hashVal int64
 
-		err := srv.Node.DB.QueryRow(slotQuery, key).Scan(&value, &hash)
+		err := srv.Node.DB.QueryRow(slotQuery, key).Scan(&value, &hashVal)
 		if err == sql.ErrNoRows {
 			http.Error(w, "Key not found", http.StatusNotFound)
 			return
@@ -107,7 +107,7 @@ func (srv *Server) PutHandler(w http.ResponseWriter, r *http.Request) {
 	targetNode := ring.FindNode(key, *srv.Ring, 16)
 
 	if targetNode.ID == srv.Node.ID {
-		keyHash := hash.Hash(key)
+		keyHash := int64(hash.Hash(key))
 		insertQuery := fmt.Sprintf("INSERT INTO files_%d (key, value, hash) VALUES ($1, $2, $3) ON CONFLICT (key) DO UPDATE SET value = $2, hash = $3", srv.Node.Slot)
 
 		_, err := srv.Node.DB.Exec(insertQuery, key, value, keyHash)

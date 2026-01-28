@@ -26,7 +26,7 @@ func BalanceAddition(newNode *node.Node, rightNode *node.Node, n int) {
 			continue
 		}
 
-		recordSlot := hash.GetSlot(record.Hash,n)
+		recordSlot := hash.GetSlot(uint64(record.Hash),n)
 		if recordSlot <= newNode.Slot{
 			recordsToMove = append(recordsToMove, record)
 		}
