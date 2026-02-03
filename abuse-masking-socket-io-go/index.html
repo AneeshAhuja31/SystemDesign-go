@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Abuse-Masked Chat</title>
+</head>
+<body>
+    <h2 style="margin:0">Abuse-Masked Chat</h2>
+    <span id="status"><b>Status:</b> Disconnected</span><br><br>
+    <input id="roomInput" placeholder="Room name" />
+    <button onclick="joinRoom()">Join Room</button>
+    <button onclick="leaveRoom()">Leave Room</button><br><br>
+    <input id="msgInput" placeholder="Message" onkeydown="if(event.key==='Enter') sendMessage()" />
+    <button onclick="sendMessage()">Send</button><br><br>
+    <div id="messages" style="height:400px;overflow-y:auto;border:1px solid gray;padding:4px"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.5.0/socket.io.min.js"></script>
+<script>
+    const socket = io("http://localhost:9000");
+    const statusEl = document.getElementById("status");
+    const messages = document.getElementById("messages");
+    let currentRoom = "";
+
+    function log(text) {
+        const p = document.createElement("p");
+        p.textContent = text;
+        p.style.margin = "2px 0";
+        messages.appendChild(p);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    socket.on("connect", () => {
+        statusEl.innerHTML = "<b>Status:</b> Connected (" + socket.id + ")";
+    });
+
+    socket.on("disconnect", () => {
+        statusEl.innerHTML = "<b>Status:</b> Disconnected";
+    });
+
+    socket.on("receive_msg", (senderID, message) => {
+        log(senderID + ": " + message);
+    });
+
+    socket.on("server_msg", (text) => {
+        log("[SERVER] " + text);
+    });
+
+    function joinRoom() {
+        const room = document.getElementById("roomInput").value.trim();
+        if (!room) return;
+        if (currentRoom) socket.emit("leave_room", currentRoom);
+        currentRoom = room;
+        socket.emit("join_room", room);
+        log("-- joined room: " + room + " --");
+    }
+
+    function leaveRoom() {
+        if (!currentRoom) return;
+        socket.emit("leave_room", currentRoom);
+        log("-- left room: " + currentRoom + " --");
+        currentRoom = "";
+    }
+
+    function sendMessage() {
+        const msg = document.getElementById("msgInput").value.trim();
+        if (!currentRoom || !msg) return;
+        socket.emit("send_msg", currentRoom, msg);
+        document.getElementById("msgInput").value = "";
+    }
+</script>
+</body>
+</html>
