@@ -1,3 +1,5 @@
+github.com/AneeshAhuja31/SystemDesign-go v0.0.0-20260216013029-cfb4a955f45b h1:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+github.com/AneeshAhuja31/SystemDesign-go v0.0.0-20260216013029-cfb4a955f45b/go.mod h1:8h51yvuhtwJRjtdDYeOg0T7R4JERaqwcb6DNpTB3M7k=
 github.com/elastic/elastic-transport-go/v8 v8.8.0 h1:7k1Ua+qluFr6p1jfJjGDl97ssJS/P7cHNInzfxgBQAo=
 github.com/elastic/elastic-transport-go/v8 v8.8.0/go.mod h1:YLHer5cj0csTzNFXoNQ8qhtGY1GTvSqPnKWKaqQE3Hk=
 github.com/elastic/go-elasticsearch/v8 v8.19.3 h1:5LDg0hfGJXBa9Y+2QlUgRTsNJ/7rm7oNidydtFAq0LI=

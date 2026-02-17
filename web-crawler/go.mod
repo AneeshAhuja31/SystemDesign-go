@@ -3,6 +3,7 @@ module web-crawler
 go 1.25.5
 
 require (
+	github.com/AneeshAhuja31/SystemDesign-go v0.0.0-20260216013029-cfb4a955f45b // indirect
 	github.com/elastic/elastic-transport-go/v8 v8.8.0 // indirect
 	github.com/elastic/go-elasticsearch/v8 v8.19.3 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
