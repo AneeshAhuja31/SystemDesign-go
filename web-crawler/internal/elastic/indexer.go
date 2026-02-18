@@ -22,6 +22,7 @@ func IndexPage(es *elasticsearch.Client, doc models.PageDocument) error{
 	
 	if err != nil{
 		log.Println("Error indexing document in elasticserch: ",err)
+		return err
 	}
 	if res.IsError(){
 		return fmt.Errorf("elasticsearch index error: %s", res.String())
