@@ -55,15 +55,19 @@ func MarkFailed(db *sql.DB, id int, reason string) error {
 }
 
 func GetCrawlStats(db *sql.DB) (*models.CrawlStats,error){
-	crawlstatrows := db.QueryRow(`SELECT 
-				COUNT(*) as total, 
-				COUNT(*) FILTER (WHERE status='pending'), 
+	crawlstatrows := db.QueryRow(`SELECT
+				COUNT(*) as total,
+				COUNT(*) FILTER (WHERE status='pending'),
 				COUNT(*) FILTER (WHERE status='in_progress'),
 				COUNT(*) FILTER (WHERE status='crawled'),
 				COUNT(*) FILTER (WHERE status='failed')
-			`)
-	
+			FROM frontier`)
+
 	var crawlstats models.CrawlStats
-	crawlstatrows.Scan(&crawlstats.TotalURLs,&crawlstats.Pending,&crawlstats.InProgress,&crawlstats.Crawled,&crawlstats.Failed)
+	err := crawlstatrows.Scan(&crawlstats.TotalURLs,&crawlstats.Pending,&crawlstats.InProgress,&crawlstats.Crawled,&crawlstats.Failed)
+	if err != nil {
+		log.Println("Error scanning crawl stats: ",err)
+		return &crawlstats,err
+	}
 	return &crawlstats,nil
 }

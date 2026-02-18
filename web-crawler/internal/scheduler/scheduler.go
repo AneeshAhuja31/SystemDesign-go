@@ -48,10 +48,6 @@ func (s *Scheduler) Start() {
 		}
 
 		for _, frontierURL := range urls {
-			if s.Bloom.MightContain(frontierURL.URL) {
-				continue
-			}
-
 			parsed, err := url.Parse(frontierURL.URL)
 			if err != nil {
 				log.Println("Error parsing URL: ", frontierURL.URL)
